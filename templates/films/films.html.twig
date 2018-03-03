@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Catégorie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for film in films %}
+                <td>{{ film.titre }}</td>
+                <td>{{ film.description }}</td>
+                <td>{{ film.categorie }}</td>
+                <td>{{ film.photo }}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
