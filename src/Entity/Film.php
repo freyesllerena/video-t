@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FilmRepository")
@@ -19,6 +20,7 @@ class Film
     /**
      * @var string
      * @ORM\Column(type="string")
+     * @Assert\Length(min=10)
      */
     private $titre;
 
