@@ -1,26 +1,51 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button>Envoyer</button>
-    {{ form_end(form) }}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>Catégorie</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for film in films %}
-                <td>{{ film.titre }}</td>
-                <td>{{ film.description }}</td>
-                <td>{{ film.categorie }}</td>
-                <td>{{ film.photo }}</td>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h1>Vidéothèque en ligne</h1>
+    <div class="main container-fluid">
+        <table class="table table-striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th class="text-center">Titre</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Catégorie</th>
+                    <th class="text-center">Affiche</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for film in films %}
+                    <tr>
+                        <td class="text-left" style="width:15%;">{{ film.titre }}</td>
+                        <td class="text-left" style="width:45%;">{{ film.description }}</td>
+                        <td class="text-center" style="width:5%;">{{ film.categorie }}</td>
+                        <td class="text-center" style="width:25%;">{{ film.photo }}</td>
+                        <td class="actions-btn-2-normal text-center" style="width:10%>
+                            <div class="btn-group" role="group">
+                                <a type="button" class="btn btn-default btn-action-sigma" href="{{ path('films_edit', {'id': film.id}) }}"><span class="glyphicon glyphicon-pencil"></span><br>Modifier</a>
+                                <a type="button" class="btn btn-default btn-action-sigma" href="{{ path('films_remove', {'id': film.id}) }}"><span class="glyphicon glyphicon-pencil"></span><br>Effacer</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        {#$('#list-title').dataTable( {#}
+            {#pagingType: "simple_numbers",#}
+            {#"language": {#}
+                {#"url": "{{ app.request.getSchemeAndHttpHost() ~ asset('bundles/prismasigma/js/datatables/translation/French.json') }}"#}
+            {#},#}
+            {#"initComplete": function(settings, json) {#}
+                {#$('div.dataTables_filter input').addClass('form-control');#}
+                {#$(this).removeClass('hidden');#}
+            {#},#}
+            {#"aaSorting": [[ 1, "asc" ]]#}
+        {#} );#}
+
+    </script>
+{% endblock javascripts %}

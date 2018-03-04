@@ -26,7 +26,7 @@ class Film
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="description", type="text", length=1000, nullable=true)
      */
     private $description;
 
@@ -53,7 +53,7 @@ class Film
     /**
      * @param mixed $id
      */
-    public function setId($id): void
+    public function setId($id)
     {
         $this->id = $id;
     }
@@ -61,7 +61,7 @@ class Film
     /**
      * @return string
      */
-    public function getTitre(): string
+    public function getTitre()
     {
         return $this->titre;
     }
@@ -69,7 +69,7 @@ class Film
     /**
      * @param string $titre
      */
-    public function setTitre(string $titre): void
+    public function setTitre(string $titre)
     {
         $this->titre = $titre;
     }
@@ -77,7 +77,7 @@ class Film
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription()
     {
         return $this->description;
     }
@@ -85,7 +85,7 @@ class Film
     /**
      * @param string $description
      */
-    public function setDescription(string $description): void
+    public function setDescription(string $description)
     {
         $this->description = $description;
     }
@@ -101,7 +101,7 @@ class Film
     /**
      * @param mixed $categorie
      */
-    public function setCategorie($categorie): void
+    public function setCategorie($categorie)
     {
         $this->categorie = $categorie;
     }
@@ -117,7 +117,7 @@ class Film
     /**
      * @param mixed $photo
      */
-    public function setPhoto($photo): void
+    public function setPhoto($photo)
     {
         $this->photo = $photo;
     }
