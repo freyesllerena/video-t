@@ -4,8 +4,9 @@
     <h1>Vidéothèque en ligne</h1>
     <div class="main container-fluid">
     <div class="count">
-        {{ pagination.getTotalItemCount }}
+        <label>Nombre de films: {{ pagination.getTotalItemCount }}</label>
     </div>
+        <br>
         <table class="table table-striped" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -22,10 +23,13 @@
                 {% for film in pagination %}
                     <tr>
                         <td class="text-left" style="width:15%;">{{ film.titre }}</td>
-                        <td class="text-left" style="width:45%;">{{ film.description }}</td>
+                        <td class="text-left" style="width:60%;">{{ film.description }}</td>
                         <td class="text-center" style="width:5%;">{{ film.categorie }}</td>
-                        <td class="text-center" style="width:25%;">{{ film.photo }}</td>
-                        <td class="actions-btn-2-normal text-center" style="width:10%>
+                        <td class="text-center" style="width:15%;">
+                            <img src="{{ '/uploads/photos/' ~ film.photo }}" style="width: 100px"/>
+
+                        </td>
+                        <td class="actions-btn-2-normal text-center" style="width:5%">
                             <div class="btn-group" role="group">
                                 <a type="button" class="btn btn-default btn-action-sigma" href="{{ path('films_edit', {'id': film.id}) }}"><span class="glyphicon glyphicon-pencil"></span><br>Modifier</a>
                                 <a type="button" class="btn btn-default btn-action-sigma" href="{{ path('films_remove', {'id': film.id}) }}"><span class="glyphicon glyphicon-pencil"></span><br>Effacer</a>
@@ -48,3 +52,4 @@
 
     </script>
 {% endblock javascripts %}
+
