@@ -11,6 +11,7 @@ namespace App\Controller;
 
 
 use App\Form\FilmType;
+use App\Repository\FilmRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,24 +58,24 @@ class FilmsController extends Controller
      */
     public function list (Request $request, Environment $twig, RegistryInterface $doctrine, FormFactoryInterface $formFactory) {
 
-        $films = $doctrine->getRepository(Film::class)->findAll();
-        $form = $formFactory->createBuilder(FilmType::class, $films[0])->getForm();
-
-        $form->handleRequest($request);
-
-
-        // Creating pagnination
+        $something = (object)[
+            'categorie' => null,
+            'create' => false
+        ];
+        /** @var FilmRepository $filmRepo */
+        $filmRepo = $doctrine->getRepository(Film::class);
+        $filmQuery = $filmRepo->queryFilmsBySomething($something);
+        // Création de la pagnination
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $films,
+            $filmQuery,
             $request->query->get('page', 1),
             10
         );
 
 
         return new Response($twig->render('films/films.html.twig', [
-                'films' => $films,
-                'pagination' => $pagination
+                'pagination' => $pagination,
             ]
         ));
     }
@@ -126,7 +127,10 @@ class FilmsController extends Controller
             $doctrine->getEntityManager()->persist($film);
             $doctrine->getEntityManager()->flush();
 
-            return $this->redirectToRoute('film_list');
+
+            return $this->redirectToRoute('film_list', [
+                'id' => $film->getId()
+            ]);
         }
 
         return new Response($twig->render('films/film.html.twig', [

@@ -9,19 +9,17 @@
         <table class="table table-striped" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    {#<th class="text-center">Titre</th>#}
+                    <th{% if pagination.isSorted('f.titre') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Title', 'f.titre') }}</th>
+                    <th{% if pagination.isSorted('f.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Description', 'f.description') }}</th>
 
-                    <th{% if pagination.isSorted('film.getTitre') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Title', 'film.getTitre') }}</th>
-
-
-                    <th class="text-center">Description</th>
+                    {#<th class="text-center">Description</th>#}
                     <th class="text-center">Catégorie</th>
                     <th class="text-center">Affiche</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for film in films %}
+                {% for film in pagination %}
                     <tr>
                         <td class="text-left" style="width:15%;">{{ film.titre }}</td>
                         <td class="text-left" style="width:45%;">{{ film.description }}</td>
@@ -37,22 +35,16 @@
                 {% endfor %}
             </tbody>
         </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
     </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        {#$('#list-title').dataTable( {#}
-            {#pagingType: "simple_numbers",#}
-            {#"language": {#}
-                {#"url": "{{ app.request.getSchemeAndHttpHost() ~ asset('bundles/prismasigma/js/datatables/translation/French.json') }}"#}
-            {#},#}
-            {#"initComplete": function(settings, json) {#}
-                {#$('div.dataTables_filter input').addClass('form-control');#}
-                {#$(this).removeClass('hidden');#}
-            {#},#}
-            {#"aaSorting": [[ 1, "asc" ]]#}
-        {#} );#}
 
     </script>
 {% endblock javascripts %}

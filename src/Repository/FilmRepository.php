@@ -31,4 +31,22 @@ class FilmRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param $something
+     * @return \Doctrine\ORM\Query
+     */
+    public function queryFilmsBySomething($something)
+    {
+        $query =  $this->createQueryBuilder('f');
+
+        if ($something->create) {
+            $query
+                ->orderBy('f.id', 'DESC');
+        }
+
+
+        return $query->getQuery();
+    }
+
 }

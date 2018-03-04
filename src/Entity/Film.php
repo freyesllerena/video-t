@@ -27,12 +27,14 @@ class Film
     /**
      * @var string
      * @ORM\Column(name="description", type="text", length=1000, nullable=true)
+     * @Assert\NotNull()
      */
     private $description;
 
     /**
      * @var
      * @ORM\Column(type="integer")
+     * @Assert\NotNull()
      */
     private $categorie;
 
