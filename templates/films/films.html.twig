@@ -3,10 +3,17 @@
 {% block body %}
     <h1>Vidéothèque en ligne</h1>
     <div class="main container-fluid">
+    <div class="count">
+        {{ pagination.getTotalItemCount }}
+    </div>
         <table class="table table-striped" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th class="text-center">Titre</th>
+                    {#<th class="text-center">Titre</th>#}
+
+                    <th{% if pagination.isSorted('film.getTitre') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Title', 'film.getTitre') }}</th>
+
+
                     <th class="text-center">Description</th>
                     <th class="text-center">Catégorie</th>
                     <th class="text-center">Affiche</th>

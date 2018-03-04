@@ -63,8 +63,18 @@ class FilmsController extends Controller
         $form->handleRequest($request);
 
 
+        // Creating pagnination
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $films,
+            $request->query->get('page', 1),
+            10
+        );
+
+
         return new Response($twig->render('films/films.html.twig', [
-                'films' => $films
+                'films' => $films,
+                'pagination' => $pagination
             ]
         ));
     }
