@@ -10,6 +10,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Compteur;
 use App\Form\FilmType;
 use App\Repository\FilmRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -125,17 +126,18 @@ class FilmsController extends Controller
                 $film->setPhoto($form->getData()->getPhoto()) ;
             }
 
+            $film->setDateInsertion(new \DateTime());
+
             $doctrine->getEntityManager()->persist($film);
             $doctrine->getEntityManager()->flush();
 
-            // Envoi du mail à l'administrateur
-            // $adminEmail = $this->container->get('swiftmailer.delivery_addresses');
-            $message = (new \Swift_Message('Ajout nouveau film'))
-                ->setFrom(['testtransmision2014@gmail.com' => 'Fidel REYES'])
-                ->setTo('testtransmision2014@gmail.com')
-                ->setBody("Le nouveau film ".$form->getData()->getTitre()." a bien été ajouté");
+            // mise à jour table compteur
+            $this->updateCompteur($doctrine);
 
-            $mailer->send($message);
+            // Envoi du mail à l'administrateur
+            $subject = 'Sjout du nouveau film ' .$form->getData()->getTitre();
+            $msg =  "Le nouveau film ".$form->getData()->getTitre()." a bien été ajouté";
+            $this->sendMailToAdmin($subject, $msg, $mailer);
 
 
             return $this->redirectToRoute('film_list', [
@@ -213,21 +215,51 @@ class FilmsController extends Controller
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function delete (Film $film, RegistryInterface $doctrine, \Swift_Mailer $mailer) {
-
+        $titre = $film->getTitre();
         $doctrine->getEntityManager()->remove($film);
         $doctrine->getEntityManager()->flush();
 
-
+        // Mise à jour table compteur
+        $this->updateCompteur($doctrine);
 
         // Envoi du mail à l'administrateur
-        // $adminEmail = $this->container->get('swiftmailer.delivery_addresses');
-        $message = (new \Swift_Message('Suppression de film'))
-            ->setFrom(['testtransmision2014@gmail.com' => 'Fidel REYES'])
-            ->setTo('testtransmision2014@gmail.com')
-            ->setBody("Le film ".$film->getTitre()." a bien été supprimé");
-
-        $mailer->send($message);
+        $subject = 'Suppression du film' .$titre;
+        $msg =  'Le film '.$titre.' a bien été supprimé';
+        $this->sendMailToAdmin($subject, $msg, $mailer);
 
         return $this->redirectToRoute('film_list');
+    }
+
+    /**
+     * @param RegistryInterface $doctrine
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function updateCompteur(RegistryInterface $doctrine) {
+        // mise à jour table compteur
+        $compteur = $doctrine->getRepository(Compteur::class)->findOneBy(['id' => 1]);
+        if (is_null($compteur)) {
+            $compteur = new Compteur();
+        }
+        $countFilms =  count($doctrine->getRepository(Film::class)->findAll());
+        $compteur->setTotal($countFilms);
+        $doctrine->getEntityManager()->persist($compteur);
+        $doctrine->getEntityManager()->flush();
+    }
+
+    /**
+     * Envoi du mail à l'administrateur
+     * @param $subject
+     * @param $msg
+     * @param \Swift_Mailer $mailer
+     */
+    private function sendMailToAdmin($subject, $msg, $mailer) {
+        // $adminEmail = $this->container->get('swiftmailer.delivery_addresses');
+        $message = (new \Swift_Message($subject))
+            ->setFrom(['testtransmision2014@gmail.com' => 'Fidel REYES'])
+            ->setTo('testtransmision2014@gmail.com')
+            ->setBody($msg);
+
+        $mailer->send($message);
     }
 }

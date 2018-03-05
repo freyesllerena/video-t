@@ -16,9 +16,7 @@
                 <tr>
                     <th{% if pagination.isSorted('f.titre') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Title', 'f.titre') }}</th>
                     <th{% if pagination.isSorted('f.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Description', 'f.description') }}</th>
-
-                    {#<th class="text-center">Description</th>#}
-                    <th class="text-center">Catégorie</th>
+                    <th{% if pagination.isSorted('f.categorie') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Catégorie', 'f.categorie') }}</th>
                     <th class="text-center">Affiche</th>
                     <th class="text-center">Actions</th>
                 </tr>
