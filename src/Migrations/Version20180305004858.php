@@ -8,14 +8,14 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20180303143614 extends AbstractMigration
+class Version20180305004858 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE film CHANGE cateegorie categorie INT NOT NULL');
+        $this->addSql('ALTER TABLE film CHANGE date_insertion date_insertion DATETIME DEFAULT NULL');
     }
 
     public function down(Schema $schema)
@@ -23,6 +23,6 @@ class Version20180303143614 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE film CHANGE categorie cateegorie INT NOT NULL');
+        $this->addSql('ALTER TABLE film CHANGE date_insertion date_insertion DATETIME DEFAULT \'NULL\'');
     }
 }

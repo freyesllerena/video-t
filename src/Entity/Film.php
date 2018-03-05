@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,21 +21,21 @@ class Film
     /**
      * @var string
      * @ORM\Column(type="string")
-     * @Assert\Length(min=10)
+     * @Assert\Length(min=10, minMessage="Cet titre est trop court.")
      */
     private $titre;
 
     /**
      * @var string
-     * @ORM\Column(name="description", type="text", length=1000, nullable=true)
-     * @Assert\NotNull()
+     * @ORM\Column(name="description", type="text", length=1000, nullable=false)
+     * @Assert\NotBlank(message = "Veuillez renseigner la description.")
      */
     private $description;
 
     /**
-     * @var
-     * @ORM\Column(type="integer")
-     * @Assert\NotNull()
+     * @var string
+     * @ORM\Column(name="categorie", type="string", nullable=false)
+     * @Assert\NotBlank(message = "Veuillez renseigner la catégorie.")
      */
     private $categorie;
 
@@ -43,6 +44,15 @@ class Film
      * @ORM\Column(type="string")
      */
     private $photo;
+
+    /**
+     * date d'insertion du film
+     * @var datetime
+     * @ORM\Column(name="date_insertion", type="datetime", nullable=true)
+     * @Assert\DateTime(message = "Le format date n'est pas valide.")
+     */
+    private $dateInsertion;
+
 
     /**
      * @return mixed
@@ -95,25 +105,25 @@ class Film
     /**
      * @return mixed
      */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getCategorie()
     {
         return $this->categorie;
     }
 
     /**
-     * @param mixed $categorie
+     * @param $categorie
      */
     public function setCategorie($categorie)
     {
         $this->categorie = $categorie;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPhoto()
-    {
-        return $this->photo;
     }
 
     /**
@@ -124,5 +134,19 @@ class Film
         $this->photo = $photo;
     }
 
+    /**
+     * @return DateTime
+     */
+    public function getDateInsertion()
+    {
+        return $this->dateInsertion;
+    }
 
+    /**
+     * @param DateTime $dateInsertion
+     */
+    public function setDateInsertion(DateTime $dateInsertion)
+    {
+        $this->dateInsertion = $dateInsertion;
+    }
 }

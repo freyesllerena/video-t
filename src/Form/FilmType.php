@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Film;
+use App\Entity\Categorie;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -16,7 +18,13 @@ class FilmType extends AbstractType
         $builder
             ->add('titre', TextType::class)
             ->add('description', TextareaType::class)
-            ->add('categorie', TextType::class)
+//            ->add('idCategorie', TextType::class)
+            ->add('categorie', EntityType::class, array(
+                'class' => Categorie::class,
+                'choice_label' => 'name',
+            ))
+
+
             ->add('photo', TextType::class)
         ;
     }
@@ -24,7 +32,6 @@ class FilmType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // uncomment if you want to bind to a class
             'data_class' => Film::class,
         ]);
     }

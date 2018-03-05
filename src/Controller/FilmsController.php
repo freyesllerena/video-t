@@ -88,14 +88,15 @@ class FilmsController extends Controller
      * @param Environment $twig
      * @param RegistryInterface $doctrine
      * @param FormFactoryInterface $formFactory
-     * @return Response
+     * @param \Swift_Mailer $mailer
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function new (Request $request, Environment $twig, RegistryInterface $doctrine, FormFactoryInterface $formFactory) {
+    public function new (Request $request, Environment $twig, RegistryInterface $doctrine, FormFactoryInterface $formFactory, \Swift_Mailer $mailer) {
 
         $film = new Film();
         $form = $formFactory->createBuilder(FilmType::class, $film)->getForm();
@@ -116,8 +117,8 @@ class FilmsController extends Controller
                 $film->setDescription($form->getData()->getDescription()) ;
             }
 
-            if ($form->getData()->getCategorie()) {
-                $film->setCategorie($form->getData()->getCategorie()) ;
+            if ($form->getData()->getCategorie()->getName()) {
+                $film->setCategorie($form->getData()->getCategorie()->getName()) ;
             }
 
             if ($form->getData()->getPhoto()) {
@@ -126,6 +127,15 @@ class FilmsController extends Controller
 
             $doctrine->getEntityManager()->persist($film);
             $doctrine->getEntityManager()->flush();
+
+            // Envoi du mail à l'administrateur
+            // $adminEmail = $this->container->get('swiftmailer.delivery_addresses');
+            $message = (new \Swift_Message('Ajout nouveau film'))
+                ->setFrom(['testtransmision2014@gmail.com' => 'Fidel REYES'])
+                ->setTo('testtransmision2014@gmail.com')
+                ->setBody("Le nouveau film ".$form->getData()->getTitre()." a bien été ajouté");
+
+            $mailer->send($message);
 
 
             return $this->redirectToRoute('film_list', [
@@ -155,10 +165,12 @@ class FilmsController extends Controller
      * @throws \Twig_Error_Syntax
      */
     public function edit (Request $request, Environment $twig, RegistryInterface $doctrine, FormFactoryInterface $formFactory) {
-        $films = $doctrine->getRepository(Film::class)->findOneBy(['id' => $request->get('id')]);
-        if (!is_null($films)) {
 
-            $form = $formFactory->createBuilder(FilmType::class, $films)->getForm();
+        $film = $doctrine->getRepository(Film::class)->findOneBy(['id' => $request->get('id')]);
+        if (!is_null($film)) {
+
+
+            $form = $formFactory->createBuilder(FilmType::class, $film)->getForm();
 
             $form->add('submit', SubmitType::class, [
                 'label' => 'Edit',
@@ -167,6 +179,11 @@ class FilmsController extends Controller
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+
+                if ($form->getData()->getCategorie()->getName()) {
+                    $film->setCategorie($form->getData()->getCategorie()->getName()) ;
+                }
+
                 $this->addFlash(
                     'notice',
                     'Your changes were saved!'
@@ -185,19 +202,31 @@ class FilmsController extends Controller
     }
 
     /**
-     * remove Film
+     * Remove film
      *
      * @Route("/films/remove/{id}", name="films_remove", requirements={"id"="\d+"})
      * @param Film $film
      * @param RegistryInterface $doctrine
+     * @param \Swift_Mailer $mailer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function delete (Film $film, RegistryInterface $doctrine) {
+    public function delete (Film $film, RegistryInterface $doctrine, \Swift_Mailer $mailer) {
 
         $doctrine->getEntityManager()->remove($film);
         $doctrine->getEntityManager()->flush();
+
+
+
+        // Envoi du mail à l'administrateur
+        // $adminEmail = $this->container->get('swiftmailer.delivery_addresses');
+        $message = (new \Swift_Message('Suppression de film'))
+            ->setFrom(['testtransmision2014@gmail.com' => 'Fidel REYES'])
+            ->setTo('testtransmision2014@gmail.com')
+            ->setBody("Le film ".$film->getTitre()." a bien été supprimé");
+
+        $mailer->send($message);
 
         return $this->redirectToRoute('film_list');
     }

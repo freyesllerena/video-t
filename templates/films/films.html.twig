@@ -3,9 +3,13 @@
 {% block body %}
     <h1>Vidéothèque en ligne</h1>
     <div class="main container-fluid">
-    <div class="count">
-        <label>Nombre de films: {{ pagination.getTotalItemCount }}</label>
-    </div>
+        <div class="btn-group" role="group">
+            <a type="button" class="btn btn-default btn-action-sigma" href="{{ path('film_new') }}"><span class="glyphicon glyphicon-pencil"></span><br>Ajouter</a>
+        </div>
+        <br>
+        <div class="count">
+            <label>Nombre de films: {{ pagination.getTotalItemCount }}</label>
+        </div>
         <br>
         <table class="table table-striped" cellspacing="0" width="100%">
             <thead>
