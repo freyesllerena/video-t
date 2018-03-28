@@ -74,6 +74,9 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
+    "pagerfanta/pagerfanta": {
+        "version": "v1.0.5"
+    },
     "pdepend/pdepend": {
         "version": "2.5.2"
     },
@@ -230,6 +233,9 @@
             "ref": "cda8b550123383d25827705d05a42acf6819fe4e"
         }
     },
+    "symfony/security": {
+        "version": "v4.0.6"
+    },
     "symfony/stopwatch": {
         "version": "v4.0.5"
     },
@@ -292,6 +298,9 @@
     },
     "twig/twig": {
         "version": "v2.4.4"
+    },
+    "white-october/pagerfanta-bundle": {
+        "version": "v1.1.2"
     },
     "zendframework/zend-code": {
         "version": "3.3.0"
